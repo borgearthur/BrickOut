@@ -8,6 +8,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "screen.h"
-#include "keyboard.h"
-#include "timer.h"
+#include "../include/screen.h"
+#include "../include/keyboard.h"
+#include "../include/timer.h"
