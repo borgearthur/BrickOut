@@ -10,7 +10,7 @@
 
   1.   gcc -I./include src/*.c -o BrickOut
 
-  2.  ./BrickOut
+./BrickOut
 
   */
 
@@ -37,57 +37,79 @@ void DesenhaMapa(char **mapa);
 
 
 int main() {
+  char **mapa;
+  int i, j;
   screenInit(1);
   telaInicio();
   screenClear();
+  
 
-  char mapa[LINHA][COLUNA + 1] = {
+  mapa = (char **)calloc(LINHA, sizeof(char*)); // Alocando dinamicamente a matriz do labirinto
+  for (i = 0; i < LINHA; i++) {
+      mapa[i] = (char *)calloc(COLUNA + 1, sizeof(char));
+  }
+
+  char mapa_init[LINHA][COLUNA + 1] = {
       "                                                    ",
-      " 111 111 111 111 111 111 111 111 111 111 111 111 111",
-      " 111 111 111 111 111 111 111 111 111 111 111 111 111",
-      "111 111 111 111 111 111 111 111 111 111 111 111 111 ",
-      "111 111 111 111 111 111 111 111 111 111 111 111 111 ",
-      " 111 111 111 111 111 111 111 111 111 111 111 111 111",
-      " 111 111 111 111 111 111 111 111 111 111 111 111 111",
-      "111 111 111 111 111 111 111 111 111 111 111 111 111 ",
-      "111 111 111 111 111 111 111 111 111 111 111 111 111 ",
-      " 111 111 111 111 111 111 111 111 111 111 111 111 111",
-      " 111 111 111 111 111 111 111 111 111 111 111 111 111",
-      "111 111 111 111 111 111 111 111 111 111 111 111 111 ",
-      "111 111 111 111 111 111 111 111 111 111 111 111 111 ",
+      " === === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === === ",
+      " === === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === === ",
+      " === === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === === ",
+      " === === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === === ",
+      " === === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === === ",
+      " === === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === === ",
       "                                                    ",
       "                                                    ",
       "                                                    ",
-      "                    2                               ",
-      "                 0000000                            ",
+      "                         []                         ",
+      "                      --------                      ",
       "                                                    "};
 
+  for (i = 0; i < LINHA; i++) {
+      strcpy(mapa[i], mapa_init[i]);
+  }
   DesenhaMapa(mapa);
+  int offsetX = (MAXX-30) / 2;
+  int offsetY = (MAXY) / 2;
+
+  screenGotoxy(offsetX, offsetY);
+  screenSetColor(WHITE, BLACK);
+  printf("PRESSIONE ESPAÇO PARA INICIAR");
+    screenSetBlink();
+  
+  
 
   return 0;
 }
 
 void telaInicio() {
   screenClear();
-  int offsetX = (MAXX - 40) / 2;
-  int offsetY = (MAXY - 10) / 2;
+  int offsetX = (MAXX) / 2;
+  int offsetY = (MAXY-6) / 2;
 
   char ch = '\0';
 
   screenGotoxy(offsetX, offsetY);
   printf("BrickOut");
 
-  screenGotoxy(offsetX, offsetY + 1);
+  screenGotoxy(offsetX-2, offsetY + 1);
   printf("Instruções:");
 
-  screenGotoxy(offsetX, offsetY + 2);
-  printf(" - Use as teclas A e D para mover a base\n");
-  printf(" - Pressione qualquer tecla para começar o jogo\n");
-  printf(" - Quebre Tijolos com a bola\n");
+  screenGotoxy(offsetX-10, offsetY + 2);
+  printf(" - Use as teclas A e D para mover a base");
+  screenGotoxy(offsetX-15, offsetY + 3);
+  printf(" - Pressione qualquer tecla para começar o jogo");
+  screenGotoxy(offsetX-5, offsetY + 4);
+  printf(" - Quebre Tijolos com a bola");
   //    printf(" - 3 poderes podem apareçer (1- base maior, 2- mais vidas,
   //    3-multiplicador de pontos)\n");
-  printf(" -Para sair no meio do jogo, pressione ESC, para pausar pressione "
-         "ENTER\n\n");
+  screenGotoxy(offsetX-25, offsetY + 4);
+  printf(" -Para sair no meio do jogo, pressione ESC, para pausar pressione ENTER");
   screenGotoxy(offsetX, offsetY + 5);
   printf("   Boa sorte!");
 
@@ -105,12 +127,14 @@ void DesenhaMapa(char **mapa) {
     screenGotoxy(offsetX + 1, offsetY + y + 1);
     for (int x = 0; x < COLUNA; x++) {
       char ch = mapa[y][x];
-      if (ch == '0') {
-        screenSetColor(BROWN, BLACK);
-      } else if (ch == '1') {
+      if (ch == '-') {
         screenSetColor(WHITE, BLACK);
-      } else if (ch == '2') {
-        screenSetColor(YELLOW, BLACK);
+      } else if (ch == '=') {
+        screenSetColor(WHITE, WHITE);
+      } else if (ch == '[') {
+        screenSetColor(RED, LIGHTRED);
+      } else if (ch == ']') {
+        screenSetColor(RED, LIGHTRED);
       } else {
         screenSetColor(BLACK, BLACK);
       }
