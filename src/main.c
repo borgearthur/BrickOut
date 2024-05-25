@@ -31,9 +31,16 @@ Cart cord;
 #define COLUNA 52
 #define LINHA 20
 
+int ballPosition = 0;
 void telaInicio();
 
 void DesenhaMapa(char **mapa);
+
+void moveBall()
+{
+    ballPosition++; // Move the ball position, you can update this logic based on your requirements
+    printf("\033[%d;0H[]\n", ballPosition); // Print the ball at the new position
+}
 
 
 int main() {
@@ -50,7 +57,7 @@ int main() {
   }
 
   char mapa_init[LINHA][COLUNA + 1] = {
-      "                                                    ",
+      " * * *                                              ",
       " === === === === === === === === === === === === ===",
       "=== === === === === === === === === === === === === ",
       " === === === === === === === === === === === === ===",
@@ -74,13 +81,22 @@ int main() {
       strcpy(mapa[i], mapa_init[i]);
   }
   DesenhaMapa(mapa);
-  int offsetX = (MAXX-30) / 2;
-  int offsetY = (MAXY) / 2;
 
-  screenGotoxy(offsetX, offsetY);
-  screenSetColor(WHITE, BLACK);
-  printf("PRESSIONE ESPAÇO PARA INICIAR");
-    screenSetBlink();
+  keyboardInit();
+  timerInit(1000); // Initialize the timer with a period of 1000 milliseconds
+  while (1)
+  {
+      if (keyhit())
+      {
+          break;
+      }
+      if (timerTimeOver())
+      {
+          timerUpdateTimer(1000);
+      }
+  }
+  timerDestroy();
+  keyboardDestroy(); 
   
   
 
@@ -129,12 +145,14 @@ void DesenhaMapa(char **mapa) {
       char ch = mapa[y][x];
       if (ch == '-') {
         screenSetColor(WHITE, BLACK);
+      } else if (ch == '*') {
+        screenSetColor(RED, LIGHTRED);
       } else if (ch == '=') {
         screenSetColor(WHITE, WHITE);
       } else if (ch == '[') {
-        screenSetColor(RED, LIGHTRED);
+        screenSetColor(GREEN, LIGHTGREEN);
       } else if (ch == ']') {
-        screenSetColor(RED, LIGHTRED);
+        screenSetColor(GREEN, LIGHTGREEN);
       } else {
         screenSetColor(BLACK, BLACK);
       }
