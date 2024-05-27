@@ -25,8 +25,8 @@ Os pontos serão multiplicados, caso o poder esteja ativo, e rebate a bola corre
 3. Quebre os tijolos na parte superior da tela, movendo a base.
 4. Para sair no meio do jogo, pressione ESC, para pausar pressione ENTER.
 ## 👤 Membros do grupo
-- Raul Vila Nova
-- Arthur Borges
+- Raul Vila Nova -> rvnc@cesar.school
+- Arthur Borges -> 
 
 
 
