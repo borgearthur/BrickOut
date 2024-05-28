@@ -9,7 +9,6 @@
   Escreva no terminal:
 
   1.   gcc -I./include src/*.c -o BrickOut
-
 ./BrickOut
 
   */
@@ -22,30 +21,44 @@
 #include "../include/screen.h"
 #include "../include/timer.h"
 
-typedef struct {
-  int x;
-  int y;
-} Cart;
-Cart cord;
-
 #define COLUNA 52
 #define LINHA 20
+
+typedef struct Cord{
+int x;
+int y;
+}Cord;
 
 int ballPosition = 0;
 void telaInicio();
 
 void DesenhaMapa(char **mapa);
 
-void moveBall()
-{
-    ballPosition++; // Move the ball position, you can update this logic based on your requirements
-    printf("\033[%d;0H[]\n", ballPosition); // Print the ball at the new position
+void moveBarraA(int *x);
+void moveBarraD(int *x);
+
+void moveBola(Cord *bola, int barra, Cord*dir){
+  if (bola->y == 19 && abs(bola->x - barra)<=6){
+    if barra
+  }
 }
 
 
 int main() {
-  char **mapa;
+  int offsetX = (MAXX - COLUNA) / 2;
+  int offsetY = (MAXY - LINHA) / 2;
+  char **mapa, ch;
   int i, j;
+
+  int  vidas = 3;
+  int pontos = 0;
+  Cord bola;
+  Cord dir;
+  bola->x = offSetX + 30;
+  bola->y = 19;
+  dir->x = 0;
+  dir->y = 1;
+int barra = offsetX + 23;
   screenInit(1);
   telaInicio();
   screenClear();
@@ -57,25 +70,25 @@ int main() {
   }
 
   char mapa_init[LINHA][COLUNA + 1] = {
-      " * * *                                              ",
-      " === === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === === ",
-      " === === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === === ",
-      " === === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === === ",
-      " === === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === === ",
-      " === === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === === ",
-      " === === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === === ",
-      "                                                    ",
-      "                                                    ",
-      "                                                    ",
-      "                         []                         ",
-      "                      --------                      ",
-      "                                                    "};
+      "3                                               000",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "=== === === === === === === === === === === === ===",
+      "                                                   ",
+      "                                                   ",
+      "                                                   ",
+      "                         *                         ",
+      "                      -------                      ",
+      "                                                   "};
 
   for (i = 0; i < LINHA; i++) {
       strcpy(mapa[i], mapa_init[i]);
@@ -83,15 +96,40 @@ int main() {
   DesenhaMapa(mapa);
 
   keyboardInit();
-  timerInit(1000); // Initialize the timer with a period of 1000 milliseconds
-  while (1)
-  {
-      if (keyhit())
-      {
+  timerInit(1000);
+  while (1){
+      if (keyhit()){
+          ch = readch();
+        if (ch == 27){
           break;
+        }
+        if (ch == 10){
+          while(1){
+            screenGotoxy(LINHA+3,3);
+            printf("Pressione ENTER para despausar");
+            screenUpdate();
+            ch = readch();
+            if (ch == 10){
+              screenGotoxy(LINHA+3,3);
+              printf("                              ");
+              screenUpdate();
+              break;
+            }
+          }
+        }
+        if (ch =='a'){
+          if (barra-1>offsetX+1){
+            moveBarraA(&barra);
+          }
+        }
+        if (ch =='d'){
+          if (barra+7<MAXX-offsetX){
+          moveBarraD(&barra);
+          }
+        }
       }
-      if (timerTimeOver())
-      {
+      if (timerTimeOver()){
+        
           timerUpdateTimer(1000);
       }
   }
@@ -114,21 +152,21 @@ void telaInicio() {
   printf("BrickOut");
 
   screenGotoxy(offsetX-2, offsetY + 1);
-  printf("Instruções:");
+  printf("Instruções:\n");
 
-  screenGotoxy(offsetX-10, offsetY + 2);
+  screenGotoxy(offsetX-15, offsetY + 2);
   printf(" - Use as teclas A e D para mover a base");
   screenGotoxy(offsetX-15, offsetY + 3);
   printf(" - Pressione qualquer tecla para começar o jogo");
-  screenGotoxy(offsetX-5, offsetY + 4);
+  screenGotoxy(offsetX-15, offsetY + 4);
   printf(" - Quebre Tijolos com a bola");
   //    printf(" - 3 poderes podem apareçer (1- base maior, 2- mais vidas,
   //    3-multiplicador de pontos)\n");
-  screenGotoxy(offsetX-25, offsetY + 4);
-  printf(" -Para sair no meio do jogo, pressione ESC, para pausar pressione ENTER");
+  screenGotoxy(offsetX-15, offsetY + 4);
+  printf(" -Para sair no meio do jogo, pressione ESC, para pausar pressione ENTER\n");
   screenGotoxy(offsetX, offsetY + 5);
-  printf("   Boa sorte!");
-
+  printf("Boa sorte!");
+  
   getchar();
 }
 
@@ -145,19 +183,42 @@ void DesenhaMapa(char **mapa) {
       char ch = mapa[y][x];
       if (ch == '-') {
         screenSetColor(WHITE, BLACK);
-      } else if (ch == '*') {
-        screenSetColor(RED, LIGHTRED);
       } else if (ch == '=') {
         screenSetColor(WHITE, WHITE);
-      } else if (ch == '[') {
-        screenSetColor(GREEN, LIGHTGREEN);
-      } else if (ch == ']') {
-        screenSetColor(GREEN, LIGHTGREEN);
+      } else if (ch == '*') {
+        screenSetColor(GREEN, BLACK);
       } else {
         screenSetColor(BLACK, BLACK);
       }
       printf("%c", ch);
     }
+    screenGotoxy(offsetX+1,3);
+    screenSetColor(RED, BLACK);
+    printf("%d",mapa[0][0]-48);
+    screenGotoxy(MAXX-offsetX-1,3);
+    screenSetColor(YELLOW, BLACK);
+    printf("%d",mapa[0][COLUNA]);
+
   }
   screenUpdate();
 }
+
+void moveBarraA(int *x){
+  screenSetColor(WHITE, WHITE);
+  screenGotoxy((*x)-1, 20);
+  printf("-");
+  screenGotoxy((*x)+6, 20);
+  printf(" ");
+  (*x)--;
+  screenUpdate();
+}
+
+void moveBarraD(int *x){
+  screenSetColor(WHITE, WHITE);
+  screenGotoxy((*x)+6, 20);
+  printf("-");
+  screenGotoxy((*x)-1, 20);
+  printf(" ");
+  (*x)++;
+  screenUpdate();
+  }
