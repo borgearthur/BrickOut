@@ -40,10 +40,10 @@ void DesenhaMapa(char **mapa);
 void moveBarraA(int *x);
 void moveBarraD(int *x);
 
-void moveBola(Cord *bola, int barra, Cord*dir){
-  if (bola->y == 19 && abs(bola->x - barra)<=6){
-    if barra
-  }
+void moveBola(Cord *bola, int barra, Cord *dir) {
+    if (bola->y == 19 && abs(bola->x - barra) <= 6) {
+       dir->y = -dir->y;
+    }
 }
 
 
