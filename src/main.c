@@ -23,6 +23,9 @@
 
 #define COLUNA 52
 #define LINHA 20
+#define MAXX 80 
+#define MAXY 24
+
 
 typedef struct Cord{
 int x;
