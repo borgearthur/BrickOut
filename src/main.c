@@ -8,8 +8,9 @@
 
   Escreva no terminal:
 
-  1.   gcc -I./include src/*.c -o BrickOut
-./BrickOut
+  1.   gcc -I../include keyboard.c main.c screen.c timer.c -o BrickOut
+
+2.    ./BrickOut
 
   */
 
