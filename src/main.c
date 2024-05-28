@@ -10,10 +10,7 @@
   /*Primeiramente, certifique-se de que todas as bibliotecas necessárias e o arquivo main.c estejam no mesmo diretório em sua máquina local, conforme disponibilizado no GitHub. Em seguida, execute o comando a seguir:
   */
 
-
-  
-
-  1.   gcc -I../include keyboard.c main.c screen.c timer.c -o BrickOut
+1.   gcc -I../include keyboard.c main.c screen.c timer.c -o BrickOut
 
 2.    ./BrickOut
 
