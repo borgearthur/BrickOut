@@ -52,17 +52,16 @@ int main() {
   int  vidas = 3;
   int pontos = 0;
 
-  int barra = offsetX + 23;
-
   
   Cord *bola = (Cord*)malloc(sizeof(Cord));
   Cord *dir = (Cord*)malloc(sizeof(Cord));
-  bola->x = barra +3;
+  bola->x = offsetX + 26;
   bola->y = 19;
   dir->x = 0;
   dir->y = 0;
 
   
+int barra = offsetX + 23;
 
   screenInit(1);
   telaInicio();
@@ -85,9 +84,9 @@ int main() {
       "=== === === === === === === === === === === === ===",
       "=== === === === === === === === === === === === ===",
       "=== === === === === === === === === === === === ===",
+      "=== === === === === ===  ====== === === === === ===",
       "=== === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === ===",
-      "=== === === === === === === === === === === === ===",
+      "=== === === === === ====== === === === === === === ",
       "                                                   ",
       "                                                   ",
       "                                                   ",
@@ -100,7 +99,7 @@ int main() {
   }
   DesenhaMapa(mapa);
   keyboardInit();
-  timerInit(100);
+  timerInit(200);
   screenGotoxy(offsetX, 21);
   char init = readch();
   while (1){
@@ -142,7 +141,7 @@ int main() {
         }
       }
       if (timerTimeOver()){
-        timerUpdateTimer(100);
+        timerUpdateTimer(200);
         moveBola(bola, barra, dir, &pontos, &vidas, mapa);
 
 
@@ -150,6 +149,7 @@ int main() {
         screenSetColor(RED, BLACK);
         printf("%d",vidas);
 
+        
         screenGotoxy(MAXX-offsetX-4,3);
         screenSetColor(YELLOW, BLACK);
         printf("%d",pontos);
@@ -157,7 +157,7 @@ int main() {
         if (vidas == 0){
           FILE *score;
           score = fopen("score.txt", "a");
-          fseek(score, 0, SEEK_END);
+          fseek(score, 0, SEEK_SET);
           fprintf(score, "%d\n", pontos);
           fclose(score);
           
@@ -257,7 +257,7 @@ void moveBarraD(int *x){
 void moveBola(Cord *bola, int barra, Cord*dir, int *pontos, int *vidas, char **mapa){
   struct timeval start;
     int offsetX = (MAXX - COLUNA) / 2;
-    int convx = bola->x - offsetX;
+    int convx = bola->x - offsetX-1;
     int convy = bola->y - 4;
     if (bola->y == 19 && (bola->x - barra)<=6 && (bola->x - barra)>=0){
       dir->y=-1;
@@ -278,24 +278,24 @@ void moveBola(Cord *bola, int barra, Cord*dir, int *pontos, int *vidas, char **m
               ch = mapa[convy][convx-2];
               if (ch == '='){
                 mapa[convy][convx-2] = ' ';
-                screenGotoxy(bola->x-1, bola->y-1);
+                screenGotoxy(bola->x-2, bola->y-1);
                 printf("   ");
               }else{
                 mapa[convy][convx+1] = ' ';
-                screenGotoxy(bola->x, bola->y-1);
+                screenGotoxy(bola->x-1, bola->y-1);
                 printf("   ");
 
               }}else{
                 mapa[convy][convx+2] = ' ';
-                screenGotoxy(bola->x+1, bola->y-1);
+                screenGotoxy(bola->x, bola->y-1);
               printf("   ");
             }
           *pontos += 10;
           srand(gettimeofday(&start,NULL));
-          int random = rand() % 3;
-          if (random == 0){
+          int random = rand() % 12;
+          if (random == 1 || random == 0){
             (*vidas)++;
-          }else if (random == 1){
+          }else if (random == 3 || random == 0){
             (*pontos) *= 2;
           }
           dir->y *= -1;
@@ -307,14 +307,6 @@ void moveBola(Cord *bola, int barra, Cord*dir, int *pontos, int *vidas, char **m
       }if (bola->y==4){
         dir->y = 1;
       }if (bola->y==21){
-        screenGotoxy(bola->x, bola->y);
-        printf(" ");
-        bola->x += offset+26;
-        bola->y += 19;
-        screenGotoxy(bola->x, bola->y);
-        screenSetColor(GREEN, BLACK);
-        printf("*");
-        screenUpdate();
         (*vidas)--;
         dir->y = -1;
       }
