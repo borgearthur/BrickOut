@@ -309,7 +309,7 @@ void moveBola(Cord *bola, int barra, Cord*dir, int *pontos, int *vidas, char **m
       }if (bola->y==21){
         screenGotoxy(bola->x, bola->y);
         printf(" ");
-        bola->x += offset+26;
+        bola->x += offsetX+26;
         bola->y += 19;
         screenGotoxy(bola->x, bola->y);
         screenSetColor(GREEN, BLACK);
